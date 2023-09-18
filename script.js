@@ -37,13 +37,52 @@ function generateHiddenWord(hiddenWord, secretWord, letter) { // "*a****", "mais
 
 console.log(generateHiddenWord("*a****", "maison", "s"))
 
+function reset() {
+    const randomIndice = Math.floor(Math.random()*mots.length)
+    secretWord = mots[randomIndice]
+    hiddenWord = createHiddenWord(secretWord)
+    tries = 0
+    maxTries = 6
+    hiddenWordHTML.innerText = hiddenWord
+}
+
+function testChar() {
+    const letter = inputHTML.value.charAt(0)
+
+    if (checkIfInWord(letter, secretWord)) {
+        hiddenWord = generateHiddenWord(hiddenWord, secretWord, letter)
+        hiddenWordHTML.innerText = hiddenWord
+    }
+    else {
+        tries++
+    }
+
+    if (secretWord === hiddenWord) {
+        reset()
+    }
+    else if (tries >= maxTries) {
+        reset()
+    }
+
+    inputHTML.value = ""
+    inputHTML.focus()
+}
+
 const hiddenWordHTML = document.querySelector("h3")
 const inputHTML = document.querySelector("input")
 const buttonHTML = document.querySelector("button")
 
+const mots = ["maison", "appartement", "chèvre"]
+
+let hiddenWord
+let secretWord
+let tries
+let maxTries
+
+reset()
+
 buttonHTML.addEventListener("click", () => {
-    console.log("click")
-    console.log(inputHTML.value)
+    testChar()
 })
 
 buttonHTML.addEventListener("mouseover", () => {
@@ -52,6 +91,6 @@ buttonHTML.addEventListener("mouseover", () => {
 
 inputHTML.addEventListener("keyup", (e) => {
     if (e.key === "Enter") {
-        console.log("Enter !")
+       testChar()
     }
 })
